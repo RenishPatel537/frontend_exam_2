@@ -14,7 +14,25 @@ function Queue() {
     setCapp(res.data);
   };
 
-  console.log(appointments)
+  const handleInprogress = async (id) => {
+    const res = await api.patch(`queue/${id}`, {
+      status: "in-progress",
+    });
+  };
+
+  const handleSkip = async (id) => {
+    const res = await api.patch(`queue/${id}`, {
+      status: "skipped",
+    });
+  };
+
+  const handleDone = async (id) => {
+    const res = await api.patch(`queue/${id}`, {
+      status: "done",
+    });
+  };
+
+  console.log(appointments);
   useEffect(() => {
     fetchCapp();
   }, [appointmentDate]);
@@ -70,19 +88,47 @@ function Queue() {
                     className="bg-white border-b dark:bg-white dark:border-gray-700"
                   >
                     <td className="py-4 px-6">{ap?.tokenNumber}</td>
-                    <td className="py-4 px-6">{ap?.appointment?.patient.name}</td>
-                    <td className="py-4 px-6">{ap?.appointment?.patient.phone}</td>
-                    <td className="py-4 px-6">{ap?.timeSlot}</td>
+                    <td className="py-4 px-6">
+                      {ap?.appointment?.patient.name}
+                    </td>
+                    <td className="py-4 px-6">
+                      {ap?.appointment?.patient.phone}
+                    </td>
+                    <td className="py-4 px-6">{ap?.appointment?.timeSlot}</td>
                     <td className="py-4 px-6">{ap?.status}</td>
                     <td className="py-4 px-6">
-                      <button
-                        onClick={() => {
-                          handleDetail(ap?.id);
-                        }}
-                        className="bg-emerald-800 rounded-lg p-1 text-white"
-                      >
-                        Medicine & Reports
-                      </button>
+                      {ap?.status == "waiting" && (
+                        <>
+                          <button
+                            onClick={() => {
+                              handleInprogress(ap?.id);
+                            }}
+                            className="bg-emerald-800 rounded-lg p-0.5 text-white"
+                          >
+                            In Progress
+                          </button>
+                          <button
+                            onClick={() => {
+                              handleSkip(ap?.id);
+                            }}
+                            className="bg-gray-500 rounded-lg p-0.5 text-white"
+                          >
+                            Skip
+                          </button>
+                        </>
+                      )}
+                      {ap?.status == "in_progress" && (
+                        <>
+                          <button
+                            onClick={() => {
+                              handleDone(ap?.id);
+                            }}
+                            className="bg-emerald-800 rounded-lg p-0.5 text-white"
+                          >
+                            done
+                          </button>
+                        </>
+                      )}
                     </td>
                   </tr>
                 );

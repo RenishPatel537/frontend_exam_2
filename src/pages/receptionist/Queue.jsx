@@ -135,6 +135,11 @@ function Queue() {
                           </button>
                         </>
                       )}
+                      {ap?.status == "done" && (
+                        <>
+                          <span>No action required</span>
+                        </>
+                      )}
                     </td>
                   </tr>
                 );

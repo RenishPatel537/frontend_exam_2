@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import api from "../../utils/api";
+import { useNavigate } from "react-router-dom";
 
 function Queue() {
   const [appointmentDate, setDate] = useState(
     new Date().toISOString().split("T")[0],
   );
+
+  const nav = useNavigate();
 
   const [appointments, setCapp] = useState([]);
 
@@ -18,18 +21,21 @@ function Queue() {
     const res = await api.patch(`queue/${id}`, {
       status: "in-progress",
     });
+    fetchCapp();
   };
 
   const handleSkip = async (id) => {
     const res = await api.patch(`queue/${id}`, {
       status: "skipped",
     });
+    fetchCapp();
   };
 
   const handleDone = async (id) => {
     const res = await api.patch(`queue/${id}`, {
       status: "done",
     });
+    fetchCapp();
   };
 
   console.log(appointments);
